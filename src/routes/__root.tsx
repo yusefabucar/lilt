@@ -4,7 +4,7 @@ import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import { AppProviders } from "@/components/providers";
 import appCss from "../styles.css?url";
 
-const APP_NAME = "Lilt";
+const APP_NAME = "ACCENTIFY";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -15,7 +15,7 @@ export const Route = createRootRoute({
       { name: "theme-color", content: "#12110e" },
       {
         name: "description",
-        content: "Tap and talk. Lilt hears the region in your voice. Pinpoint names the neighborhood — $0.99 a month.",
+        content: "Shazam for accents. Tap and talk — ACCENTIFY hears the region. Pinpoint names the neighborhood. Where YOU from?",
       },
     ],
     links: [

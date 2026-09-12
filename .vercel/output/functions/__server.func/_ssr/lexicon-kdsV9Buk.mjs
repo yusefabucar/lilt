@@ -1,9 +1,9 @@
-//#region node_modules/.nitro/vite/services/ssr/assets/lexicon-BPKnOVGp.js
+//#region node_modules/.nitro/vite/services/ssr/assets/lexicon-kdsV9Buk.js
 var PROFILES = [
 	{
 		id: "east-london",
 		region: "Greater London",
-		locality: "East London, England",
+		locality: "Hackney, East London",
 		country: "United Kingdom",
 		terms: [
 			"innit",
@@ -27,7 +27,7 @@ var PROFILES = [
 	{
 		id: "london",
 		region: "Greater London",
-		locality: "London, England",
+		locality: "South London",
 		country: "United Kingdom",
 		terms: [
 			"mate",
@@ -97,8 +97,8 @@ var PROFILES = [
 	},
 	{
 		id: "nyc",
-		region: "New York / New Jersey",
-		locality: "East Brooklyn, New York City",
+		region: "New York",
+		locality: "Brooklyn, NY",
 		country: "United States",
 		terms: [
 			"deadass",
@@ -117,7 +117,7 @@ var PROFILES = [
 	{
 		id: "boston",
 		region: "New England",
-		locality: "Boston, Massachusetts",
+		locality: "South Boston, MA",
 		country: "United States",
 		terms: [
 			"wicked",
@@ -189,7 +189,7 @@ var PROFILES = [
 	{
 		id: "philly",
 		region: "Mid-Atlantic US",
-		locality: "Philadelphia, Pennsylvania",
+		locality: "South Philly, PA",
 		country: "United States",
 		terms: [
 			"jawn",
@@ -205,7 +205,7 @@ var PROFILES = [
 	{
 		id: "midwest",
 		region: "US Midwest",
-		locality: "Chicago, Illinois",
+		locality: "South Side, Chicago",
 		country: "United States",
 		terms: [
 			"ope",
@@ -221,7 +221,7 @@ var PROFILES = [
 	{
 		id: "socal",
 		region: "US West Coast",
-		locality: "Los Angeles, California",
+		locality: "West LA, California",
 		country: "United States",
 		terms: [
 			"hella",

@@ -2,14 +2,14 @@ import { i as __toESM } from "../_runtime.mjs";
 import { n as require_react } from "../_libs/@radix-ui/react-compose-refs+[...].mjs";
 import { n as require_jsx_runtime } from "../_libs/react+tanstack__react-query.mjs";
 import { n as TSS_SERVER_FUNCTION, r as getServerFnById, t as createServerFn } from "./ssr.mjs";
-import { t as DIAGNOSTIC_LINES } from "./lexicon-BPKnOVGp.mjs";
+import { t as DIAGNOSTIC_LINES } from "./lexicon-kdsV9Buk.mjs";
 import { a as Lock, i as MapPin, r as Mic, t as X } from "../_libs/lucide-react.mjs";
 import { n as toast } from "../_libs/sonner.mjs";
 import { t as Slot } from "../_libs/radix-ui__react-slot.mjs";
 import { n as clsx, t as cva } from "../_libs/class-variance-authority+clsx.mjs";
 import { t as twMerge } from "../_libs/tailwind-merge.mjs";
 import { n as create, t as persist } from "../_libs/zustand.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/routes-BSOCWo2q.js
+//#region node_modules/.nitro/vite/services/ssr/assets/routes-DNLjL49M.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 function cn(...inputs) {
@@ -42,6 +42,95 @@ function Button({ className, variant, size, asChild = false, ...props }) {
 		}), className),
 		...props
 	});
+}
+function isStandalone() {
+	return window.matchMedia("(display-mode: standalone)").matches || Boolean(navigator.standalone);
+}
+function isIos() {
+	const ua = navigator.userAgent;
+	return /iPad|iPhone|iPod/i.test(ua) || navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1;
+}
+function InstallApp() {
+	const [ready, setReady] = (0, import_react.useState)(false);
+	const [installed, setInstalled] = (0, import_react.useState)(false);
+	const [deferred, setDeferred] = (0, import_react.useState)(null);
+	const [sheet, setSheet] = (0, import_react.useState)(false);
+	(0, import_react.useEffect)(() => {
+		setReady(true);
+		setInstalled(isStandalone());
+		const onPrompt = (e) => {
+			e.preventDefault();
+			setDeferred(e);
+		};
+		const onInstalled = () => setInstalled(true);
+		window.addEventListener("beforeinstallprompt", onPrompt);
+		window.addEventListener("appinstalled", onInstalled);
+		return () => {
+			window.removeEventListener("beforeinstallprompt", onPrompt);
+			window.removeEventListener("appinstalled", onInstalled);
+		};
+	}, []);
+	if (!ready || installed) return null;
+	async function onInstall() {
+		if (deferred) {
+			await deferred.prompt();
+			const choice = await deferred.userChoice;
+			setDeferred(null);
+			if (choice.outcome === "accepted") setInstalled(true);
+			return;
+		}
+		if (isIos()) {
+			window.location.assign("/?install=1&platform=ios");
+			return;
+		}
+		setSheet(true);
+	}
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+		type: "button",
+		variant: "secondary",
+		className: "w-full rounded-md",
+		onClick: () => void onInstall(),
+		children: "Get the app"
+	}), sheet ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "fixed inset-0 z-50 grid place-items-center p-4",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+			type: "button",
+			className: "absolute inset-0 bg-bg/80",
+			"aria-label": "Close",
+			onClick: () => setSheet(false)
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			role: "dialog",
+			"aria-labelledby": "install-title",
+			className: "relative z-10 w-full max-w-md rounded-xl bg-bg-elevated p-6 shadow-border",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+					type: "button",
+					onClick: () => setSheet(false),
+					className: "absolute right-4 top-4 grid size-11 place-items-center rounded-md text-fg-muted hover:text-fg",
+					"aria-label": "Close",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(X, { className: "size-4" })
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "text-xs font-medium uppercase tracking-[0.16em] text-fg-subtle",
+					children: "Home screen"
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+					id: "install-title",
+					className: "mt-2 font-display text-3xl tracking-tight",
+					children: "ACCENTIFY on your phone"
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "mt-3 text-sm leading-relaxed text-fg-muted",
+					children: "iPhone: Safari → Share → Add to Home Screen. Android: Chrome → Install app. It sits next to your other apps — own icon, full screen."
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+					className: "mt-6 w-full rounded-md",
+					onClick: () => setSheet(false),
+					children: "Got it"
+				})
+			]
+		})]
+	}) : null] });
 }
 function ListenOrb({ state, levels, remainingMs, onPress }) {
 	const live = state === "recording";
@@ -97,7 +186,7 @@ function Wave({ levels }) {
 		}, i))
 	});
 }
-function Paywall({ open, onClose, onSubscribe }) {
+function Paywall({ open, busy, error, onClose, onSubscribe }) {
 	if (!open) return null;
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 		className: "fixed inset-0 z-50 grid place-items-end sm:place-items-center",
@@ -125,29 +214,33 @@ function Paywall({ open, onClose, onSubscribe }) {
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
 					id: "paywall-title",
 					className: "mt-2 font-display text-3xl tracking-tight",
-					children: "Name the neighborhood"
+					children: "$0.99 a month"
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 					className: "mt-3 text-sm leading-relaxed text-fg-muted",
-					children: "Free Lilt hears the region — American South, Greater London, New England. Pinpoint names the place: South Florida, Boston, East Brooklyn."
+					children: "Free ACCENTIFY names the vicinity — New York, the American South, Greater London. Pinpoint names the neighborhood: Brooklyn, NY, Southie, Hackney."
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("ul", {
 					className: "mt-5 space-y-2 text-sm text-fg",
 					children: [
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", {
 							className: "rounded-md bg-bg-subtle px-3 py-2 shadow-border",
-							children: "City and neighborhood on every read"
+							children: "Neighborhood on every read — Brooklyn, NY, not just New York"
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", {
 							className: "rounded-md bg-bg-subtle px-3 py-2 shadow-border",
-							children: "Saved history stays precise"
+							children: "Billed $0.99 each month until you cancel"
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", {
 							className: "rounded-md bg-bg-subtle px-3 py-2 shadow-border",
-							children: "Cancel any time"
+							children: "Payouts go to the connected bank, not a middle wallet"
 						})
 					]
 				}),
+				error ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "mt-4 text-sm text-fg-muted",
+					children: error
+				}) : null,
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					className: "mt-6 flex items-end justify-between gap-4",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
@@ -159,7 +252,8 @@ function Paywall({ open, onClose, onSubscribe }) {
 					})] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
 						className: "rounded-md px-6",
 						onClick: onSubscribe,
-						children: "Subscribe"
+						disabled: busy,
+						children: busy ? "Opening checkout" : "Pay $0.99/mo"
 					})]
 				})
 			]
@@ -175,7 +269,7 @@ function ResultPanel({ result, premium, onUnlock, onAgain }) {
 			children: [
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 					className: "text-xs font-medium uppercase tracking-[0.16em] text-fg-subtle",
-					children: "Region"
+					children: "Vicinity"
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
 					className: "mt-2 font-display text-3xl leading-tight tracking-tight text-fg sm:text-4xl",
@@ -189,7 +283,7 @@ function ResultPanel({ result, premium, onUnlock, onAgain }) {
 					className: "mt-5",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 						className: "text-xs font-medium uppercase tracking-[0.16em] text-fg-subtle",
-						children: "Pinpoint"
+						children: "Neighborhood"
 					}), premium ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
 						className: "mt-2 flex items-start gap-2 font-display text-xl text-fg",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(MapPin, { className: "mt-1 size-4 shrink-0 text-fg-muted" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: result.locality })]
@@ -198,11 +292,12 @@ function ResultPanel({ result, premium, onUnlock, onAgain }) {
 						onClick: onUnlock,
 						className: "mt-2 flex w-full items-center justify-between gap-3 rounded-lg bg-bg-subtle px-4 py-3 text-left shadow-border",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-							className: "block font-display text-lg blur-[5px] select-none",
-							children: result.locality
+							className: "block font-display text-lg blur-[6px] select-none",
+							"aria-hidden": true,
+							children: "the neighborhood"
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 							className: "mt-1 block text-xs text-fg-muted",
-							children: "Neighborhood locked · $0.99/mo"
+							children: "Neighborhood · $0.99/mo"
 						})] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Lock, { className: "size-4 shrink-0 text-fg-muted" })]
 					})]
 				}),
@@ -225,7 +320,7 @@ function ResultPanel({ result, premium, onUnlock, onAgain }) {
 						})
 					})]
 				}),
-				result.cues.length ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", {
+				premium && result.cues.length ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", {
 					className: "mt-5 space-y-2",
 					children: result.cues.map((cue) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", {
 						className: "text-sm leading-relaxed text-fg-muted",
@@ -270,6 +365,8 @@ var createSsrRpc = (functionId) => {
 	});
 };
 var identifyAccent = createServerFn({ method: "POST" }).validator((input) => input).handler(createSsrRpc("d1919bef372c0860392b963ff18b67806cc7c6512563d01840fb21c47e54a8a3"));
+var startPinpointCheckout = createServerFn({ method: "POST" }).validator((input) => input).handler(createSsrRpc("67144286fdde82237a83ad3ea269ff4933f513a32b436772cbf45f6317c04f57"));
+var confirmPinpointCheckout = createServerFn({ method: "POST" }).validator((input) => input).handler(createSsrRpc("16096b5d8c07a59148c4cd218696b3f476c326ca2b33f7d4869c5a114663c8f5"));
 function pickMime() {
 	if (typeof MediaRecorder === "undefined") return "";
 	return [
@@ -361,13 +458,12 @@ var useLilt = create()(persist((set, get) => ({
 		}, ...get().history].slice(0, 16) });
 	},
 	clearHistory: () => set({ history: [] })
-}), { name: "lilt-desk-v1" }));
+}), { name: "accentify-v1" }));
 var MAX_MS = 8e3;
 var MIN_MS = 2200;
 function LiltApp() {
 	const premium = useLilt((s) => s.premium);
 	const subscribe = useLilt((s) => s.subscribe);
-	const cancel = useLilt((s) => s.cancel);
 	const remember = useLilt((s) => s.remember);
 	const history = useLilt((s) => s.history);
 	const [state, setState] = (0, import_react.useState)("idle");
@@ -376,6 +472,8 @@ function LiltApp() {
 	const [result, setResult] = (0, import_react.useState)(null);
 	const [error, setError] = (0, import_react.useState)(null);
 	const [paywall, setPaywall] = (0, import_react.useState)(false);
+	const [payBusy, setPayBusy] = (0, import_react.useState)(false);
+	const [payError, setPayError] = (0, import_react.useState)(null);
 	const [typed, setTyped] = (0, import_react.useState)("");
 	const line = DIAGNOSTIC_LINES[0];
 	const [mounted, setMounted] = (0, import_react.useState)(false);
@@ -389,7 +487,21 @@ function LiltApp() {
 	const stopHint = (0, import_react.useRef)(() => {});
 	(0, import_react.useEffect)(() => {
 		setMounted(true);
-	}, []);
+		const q = new URLSearchParams(window.location.search);
+		const sessionId = q.get("session_id");
+		if (q.get("checkout") === "cancel") {
+			toast("Checkout canceled. Pinpoint stays locked.");
+			window.history.replaceState({}, "", "/");
+		}
+		if (sessionId) (async () => {
+			const out = await confirmPinpointCheckout({ data: { sessionId } });
+			window.history.replaceState({}, "", "/");
+			if (out.ok) {
+				subscribe();
+				toast("Pinpoint is live. $0.99/mo is on the card.");
+			} else toast(out.error);
+		})();
+	}, [subscribe]);
 	(0, import_react.useEffect)(() => {
 		return () => teardown();
 	}, []);
@@ -519,10 +631,21 @@ function LiltApp() {
 			setError(e instanceof Error ? e.message : "Could not place that sentence.");
 		}
 	}
-	function onSubscribe() {
-		subscribe();
-		setPaywall(false);
-		toast("Pinpoint is on. Neighborhoods are unlocked.");
+	async function onSubscribe() {
+		setPayBusy(true);
+		setPayError(null);
+		try {
+			const out = await startPinpointCheckout({ data: { origin: window.location.origin } });
+			if (!out.ok) {
+				setPayError(out.error);
+				return;
+			}
+			window.location.assign(out.url);
+		} catch (e) {
+			setPayError(e instanceof Error ? e.message : "Could not open checkout.");
+		} finally {
+			setPayBusy(false);
+		}
 	}
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 		className: "relative mx-auto flex min-h-dvh w-full max-w-2xl flex-col px-5 pb-16 pt-6 sm:px-8",
@@ -530,14 +653,23 @@ function LiltApp() {
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("header", {
 				className: "flex items-center justify-between gap-3",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-					className: "font-display text-2xl tracking-tight",
-					children: "Lilt"
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "font-display text-xl tracking-[0.12em] sm:text-2xl",
+					children: "ACCENTIFY"
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
 					className: "text-xs text-fg-subtle",
-					children: "Your voice has an address"
+					children: [
+						"Where ",
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							className: "font-medium text-fg",
+							children: "YOU"
+						}),
+						" from?"
+					]
 				})] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
 					type: "button",
-					onClick: () => premium ? cancel() : setPaywall(true),
+					onClick: () => {
+						if (!premium) setPaywall(true);
+					},
 					className: "h-11 rounded-full bg-bg-elevated px-4 text-xs font-medium uppercase tracking-[0.14em] text-fg-muted shadow-border",
 					children: mounted && premium ? "Pinpoint" : "Free"
 				})]
@@ -554,7 +686,7 @@ function LiltApp() {
 					children: [
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 							className: "text-sm text-fg-muted",
-							children: state === "recording" ? "Speak naturally. Tap again to stop." : state === "analyzing" ? "Placing the voice…" : "Tap and talk. Free hears the region. Pinpoint names the city."
+							children: state === "recording" ? "Speak naturally. Tap again to stop." : state === "analyzing" ? "Placing the voice…" : "Tap and talk. Free hears the vicinity. Pinpoint names the neighborhood — Brooklyn, NY and the like."
 						}),
 						state === "idle" || state === "error" ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
 							className: "mt-4 font-display text-lg leading-snug text-fg",
@@ -577,25 +709,28 @@ function LiltApp() {
 						setResult(null);
 						idle();
 					}
-				}) : null, state !== "recording" && state !== "analyzing" && state !== "result" ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("form", {
-					className: "flex w-full max-w-lg gap-2",
-					onSubmit: (e) => {
-						e.preventDefault();
-						identifyTyped(String(new FormData(e.currentTarget).get("spoken") ?? "") || typed);
-					},
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
-						id: "spoken",
-						name: "spoken",
-						value: typed,
-						onChange: (e) => setTyped(e.target.value),
-						placeholder: "Or type a sentence the way you’d say it",
-						className: "h-11 min-w-0 flex-1 rounded-md bg-bg-elevated px-3 text-sm text-fg shadow-border outline-none placeholder:text-fg-subtle focus-visible:ring-2 focus-visible:ring-accent/40"
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-						type: "submit",
-						variant: "secondary",
-						className: "rounded-md",
-						children: "Place"
-					})]
+				}) : null, state !== "recording" && state !== "analyzing" && state !== "result" ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "flex w-full max-w-lg flex-col items-stretch gap-3",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("form", {
+						className: "flex w-full gap-2",
+						onSubmit: (e) => {
+							e.preventDefault();
+							identifyTyped(String(new FormData(e.currentTarget).get("spoken") ?? "") || typed);
+						},
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
+							id: "spoken",
+							name: "spoken",
+							value: typed,
+							onChange: (e) => setTyped(e.target.value),
+							placeholder: "Or type a sentence the way you’d say it",
+							className: "h-11 min-w-0 flex-1 rounded-md bg-bg-elevated px-3 text-sm text-fg shadow-border outline-none placeholder:text-fg-subtle focus-visible:ring-2 focus-visible:ring-accent/40"
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+							type: "submit",
+							variant: "secondary",
+							className: "rounded-md",
+							children: "Place"
+						})]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(InstallApp, {})]
 				}) : null]
 			}),
 			mounted && history.length > 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
@@ -614,7 +749,7 @@ function LiltApp() {
 								children: h.region
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 								className: "truncate text-xs text-fg-subtle",
-								children: premium ? h.locality : "Pinpoint locked"
+								children: premium ? h.locality : "Neighborhood locked"
 							})]
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
 							className: "shrink-0 font-mono text-xs tabular-nums text-fg-muted",
@@ -630,8 +765,12 @@ function LiltApp() {
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Paywall, {
 				open: paywall,
-				onClose: () => setPaywall(false),
-				onSubscribe
+				busy: payBusy,
+				error: payError,
+				onClose: () => {
+					if (!payBusy) setPaywall(false);
+				},
+				onSubscribe: () => void onSubscribe()
 			})
 		]
 	});

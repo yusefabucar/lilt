@@ -20,7 +20,7 @@ const PROFILES: Profile[] = [
   {
     id: "east-london",
     region: "Greater London",
-    locality: "East London, England",
+    locality: "Hackney, East London",
     country: "United Kingdom",
     terms: ["innit", "bruv", "mandem", "endz", "peng", "bare ", "allow it", "you get me", "wagwan", "safe ", "blud"],
     cues: ["MLE / inner-East London lexicon", "question tag innit", "bruv / mandem address"],
@@ -28,7 +28,7 @@ const PROFILES: Profile[] = [
   {
     id: "london",
     region: "Greater London",
-    locality: "London, England",
+    locality: "South London",
     country: "United Kingdom",
     terms: ["mate", "bloody", "quid", "knackered", "cheers", "queue", "gutted", "proper", "lift", "lorry"],
     cues: ["Southern British vocabulary", "mate / bloody / quid"],
@@ -59,8 +59,8 @@ const PROFILES: Profile[] = [
   },
   {
     id: "nyc",
-    region: "New York / New Jersey",
-    locality: "East Brooklyn, New York City",
+    region: "New York",
+    locality: "Brooklyn, NY",
     country: "United States",
     terms: ["deadass", "youse", "bodega", "mad ", "on god", "the city", "schlep", "wait on line", "brick", "guap"],
     cues: ["NYC intensifiers and street lexicon", "deadass / bodega"],
@@ -68,7 +68,7 @@ const PROFILES: Profile[] = [
   {
     id: "boston",
     region: "New England",
-    locality: "Boston, Massachusetts",
+    locality: "South Boston, MA",
     country: "United States",
     terms: ["wicked", "bubbler", "packie", "the cape", "rotary", "bang a uey", "dunks", "southie", "pahk", "harvard yard"],
     cues: ["Eastern New England lexicon", "wicked as intensifier"],
@@ -100,7 +100,7 @@ const PROFILES: Profile[] = [
   {
     id: "philly",
     region: "Mid-Atlantic US",
-    locality: "Philadelphia, Pennsylvania",
+    locality: "South Philly, PA",
     country: "United States",
     terms: ["jawn", "hoagie", "youse", "wooder", "the shore", "wit ", "wiz"],
     cues: ["Philadelphia lexicon", "jawn / hoagie"],
@@ -108,7 +108,7 @@ const PROFILES: Profile[] = [
   {
     id: "midwest",
     region: "US Midwest",
-    locality: "Chicago, Illinois",
+    locality: "South Side, Chicago",
     country: "United States",
     terms: ["ope", "you betcha", "pop ", "gym shoes", "front room", "the lake", "da bears"],
     cues: ["Inland North / Midwest tells", "ope / pop"],
@@ -116,7 +116,7 @@ const PROFILES: Profile[] = [
   {
     id: "socal",
     region: "US West Coast",
-    locality: "Los Angeles, California",
+    locality: "West LA, California",
     country: "United States",
     terms: ["hella", "the 405", "the 101", "dude", "like totally", "freeway", "in-n-out"],
     cues: ["California freeway names and dude/hella"],

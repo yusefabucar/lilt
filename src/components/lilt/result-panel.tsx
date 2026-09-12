@@ -15,14 +15,14 @@ export function ResultPanel({ result, premium, onUnlock, onAgain }: Props) {
   return (
     <section className="mx-auto w-full max-w-lg animate-in">
       <div className="rounded-xl bg-bg-elevated p-5 shadow-border sm:p-6">
-        <p className="text-xs font-medium uppercase tracking-[0.16em] text-fg-subtle">Region</p>
+        <p className="text-xs font-medium uppercase tracking-[0.16em] text-fg-subtle">Vicinity</p>
         <h2 className="mt-2 font-display text-3xl leading-tight tracking-tight text-fg sm:text-4xl">
           {result.region}
         </h2>
         <p className="mt-1 text-sm text-fg-muted">{result.country}</p>
 
         <div className="mt-5">
-          <p className="text-xs font-medium uppercase tracking-[0.16em] text-fg-subtle">Pinpoint</p>
+          <p className="text-xs font-medium uppercase tracking-[0.16em] text-fg-subtle">Neighborhood</p>
           {premium ? (
             <p className="mt-2 flex items-start gap-2 font-display text-xl text-fg">
               <MapPin className="mt-1 size-4 shrink-0 text-fg-muted" />
@@ -35,8 +35,10 @@ export function ResultPanel({ result, premium, onUnlock, onAgain }: Props) {
               className="mt-2 flex w-full items-center justify-between gap-3 rounded-lg bg-bg-subtle px-4 py-3 text-left shadow-border"
             >
               <span>
-                <span className="block font-display text-lg blur-[5px] select-none">{result.locality}</span>
-                <span className="mt-1 block text-xs text-fg-muted">Neighborhood locked · $0.99/mo</span>
+                <span className="block font-display text-lg blur-[6px] select-none" aria-hidden>
+                  the neighborhood
+                </span>
+                <span className="mt-1 block text-xs text-fg-muted">Neighborhood · $0.99/mo</span>
               </span>
               <Lock className="size-4 shrink-0 text-fg-muted" />
             </button>
@@ -53,7 +55,7 @@ export function ResultPanel({ result, premium, onUnlock, onAgain }: Props) {
           </div>
         </div>
 
-        {result.cues.length ? (
+        {premium && result.cues.length ? (
           <ul className="mt-5 space-y-2">
             {result.cues.map((cue) => (
               <li key={cue} className="text-sm leading-relaxed text-fg-muted">

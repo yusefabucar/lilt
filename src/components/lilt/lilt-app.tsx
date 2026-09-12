@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { InstallApp } from "@/components/lilt/install-app";
 import { ListenOrb } from "@/components/lilt/listen-orb";
 import { Paywall } from "@/components/lilt/paywall";
 import { ResultPanel } from "@/components/lilt/result-panel";
 import { identifyAccent } from "@/lib/lilt/identify";
+import { confirmPinpointCheckout, startPinpointCheckout } from "@/lib/lilt/checkout";
 import { blobToBase64, levelsFromAnalyser, pickMime, startSpeechHint } from "@/lib/lilt/audio";
 import { DIAGNOSTIC_LINES } from "@/lib/lilt/lexicon";
 import { useLilt } from "@/lib/lilt/store";
@@ -16,7 +18,6 @@ const MIN_MS = 2200;
 export function LiltApp() {
   const premium = useLilt((s) => s.premium);
   const subscribe = useLilt((s) => s.subscribe);
-  const cancel = useLilt((s) => s.cancel);
   const remember = useLilt((s) => s.remember);
   const history = useLilt((s) => s.history);
 
@@ -26,6 +27,8 @@ export function LiltApp() {
   const [result, setResult] = useState<IdentifyOk | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [paywall, setPaywall] = useState(false);
+  const [payBusy, setPayBusy] = useState(false);
+  const [payError, setPayError] = useState<string | null>(null);
   const [typed, setTyped] = useState("");
   const line = DIAGNOSTIC_LINES[0]!;
   const [mounted, setMounted] = useState(false);
@@ -41,7 +44,26 @@ export function LiltApp() {
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    const q = new URLSearchParams(window.location.search);
+    const sessionId = q.get("session_id");
+    const checkout = q.get("checkout");
+    if (checkout === "cancel") {
+      toast("Checkout canceled. Pinpoint stays locked.");
+      window.history.replaceState({}, "", "/");
+    }
+    if (sessionId) {
+      void (async () => {
+        const out = await confirmPinpointCheckout({ data: { sessionId } });
+        window.history.replaceState({}, "", "/");
+        if (out.ok) {
+          subscribe();
+          toast("Pinpoint is live. $0.99/mo is on the card.");
+        } else {
+          toast(out.error);
+        }
+      })();
+    }
+  }, [subscribe]);
 
   useEffect(() => {
     return () => teardown();
@@ -179,10 +201,21 @@ export function LiltApp() {
     }
   }
 
-  function onSubscribe() {
-    subscribe();
-    setPaywall(false);
-    toast("Pinpoint is on. Neighborhoods are unlocked.");
+  async function onSubscribe() {
+    setPayBusy(true);
+    setPayError(null);
+    try {
+      const out = await startPinpointCheckout({ data: { origin: window.location.origin } });
+      if (!out.ok) {
+        setPayError(out.error);
+        return;
+      }
+      window.location.assign(out.url);
+    } catch (e) {
+      setPayError(e instanceof Error ? e.message : "Could not open checkout.");
+    } finally {
+      setPayBusy(false);
+    }
   }
 
   const showOrb = state !== "result";
@@ -191,12 +224,16 @@ export function LiltApp() {
     <div className="relative mx-auto flex min-h-dvh w-full max-w-2xl flex-col px-5 pb-16 pt-6 sm:px-8">
       <header className="flex items-center justify-between gap-3">
         <div>
-          <p className="font-display text-2xl tracking-tight">Lilt</p>
-          <p className="text-xs text-fg-subtle">Your voice has an address</p>
+          <p className="font-display text-xl tracking-[0.12em] sm:text-2xl">ACCENTIFY</p>
+          <p className="text-xs text-fg-subtle">
+            Where <span className="font-medium text-fg">YOU</span> from?
+          </p>
         </div>
         <button
           type="button"
-          onClick={() => (premium ? cancel() : setPaywall(true))}
+          onClick={() => {
+            if (!premium) setPaywall(true);
+          }}
           className="h-11 rounded-full bg-bg-elevated px-4 text-xs font-medium uppercase tracking-[0.14em] text-fg-muted shadow-border"
         >
           {mounted && premium ? "Pinpoint" : "Free"}
@@ -213,7 +250,7 @@ export function LiltApp() {
                   ? "Speak naturally. Tap again to stop."
                   : state === "analyzing"
                     ? "Placing the voice…"
-                    : "Tap and talk. Free hears the region. Pinpoint names the city."}
+                    : "Tap and talk. Free hears the vicinity. Pinpoint names the neighborhood — Brooklyn, NY and the like."}
               </p>
               {state === "idle" || state === "error" ? (
                 <p className="mt-4 font-display text-lg leading-snug text-fg">“{line}”</p>
@@ -234,26 +271,29 @@ export function LiltApp() {
         ) : null}
 
         {state !== "recording" && state !== "analyzing" && state !== "result" ? (
-          <form
-            className="flex w-full max-w-lg gap-2"
-            onSubmit={(e) => {
-              e.preventDefault();
-              const fromForm = String(new FormData(e.currentTarget).get("spoken") ?? "");
-              void identifyTyped(fromForm || typed);
-            }}
-          >
-            <input
-              id="spoken"
-              name="spoken"
-              value={typed}
-              onChange={(e) => setTyped(e.target.value)}
-              placeholder="Or type a sentence the way you’d say it"
-              className="h-11 min-w-0 flex-1 rounded-md bg-bg-elevated px-3 text-sm text-fg shadow-border outline-none placeholder:text-fg-subtle focus-visible:ring-2 focus-visible:ring-accent/40"
-            />
-            <Button type="submit" variant="secondary" className="rounded-md">
-              Place
-            </Button>
-          </form>
+          <div className="flex w-full max-w-lg flex-col items-stretch gap-3">
+            <form
+              className="flex w-full gap-2"
+              onSubmit={(e) => {
+                e.preventDefault();
+                const fromForm = String(new FormData(e.currentTarget).get("spoken") ?? "");
+                void identifyTyped(fromForm || typed);
+              }}
+            >
+              <input
+                id="spoken"
+                name="spoken"
+                value={typed}
+                onChange={(e) => setTyped(e.target.value)}
+                placeholder="Or type a sentence the way you’d say it"
+                className="h-11 min-w-0 flex-1 rounded-md bg-bg-elevated px-3 text-sm text-fg shadow-border outline-none placeholder:text-fg-subtle focus-visible:ring-2 focus-visible:ring-accent/40"
+              />
+              <Button type="submit" variant="secondary" className="rounded-md">
+                Place
+              </Button>
+            </form>
+            <InstallApp />
+          </div>
         ) : null}
       </main>
 
@@ -266,7 +306,7 @@ export function LiltApp() {
                 <div className="min-w-0">
                   <p className="truncate text-sm text-fg">{h.region}</p>
                   <p className="truncate text-xs text-fg-subtle">
-                    {premium ? h.locality : "Pinpoint locked"}
+                    {premium ? h.locality : "Neighborhood locked"}
                   </p>
                 </div>
                 <p className="shrink-0 font-mono text-xs tabular-nums text-fg-muted">
@@ -282,7 +322,15 @@ export function LiltApp() {
         {state}
       </p>
 
-      <Paywall open={paywall} onClose={() => setPaywall(false)} onSubscribe={onSubscribe} />
+      <Paywall
+        open={paywall}
+        busy={payBusy}
+        error={payError}
+        onClose={() => {
+          if (!payBusy) setPaywall(false);
+        }}
+        onSubscribe={() => void onSubscribe()}
+      />
     </div>
   );
 }

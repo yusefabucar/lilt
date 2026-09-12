@@ -6,8 +6,8 @@ import { n as TriangleAlert } from "../_libs/lucide-react.mjs";
 import { a as union, i as string, n as number, r as object, t as literal } from "../_libs/zod.mjs";
 import { t as QueryClient } from "../_libs/tanstack__query-core.mjs";
 import { t as Toaster } from "../_libs/sonner.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/router-CUw1YPvr.js
-var router_CUw1YPvr_exports = /* @__PURE__ */ __exportAll({ getRouter: () => getRouter });
+//#region node_modules/.nitro/vite/services/ssr/assets/router-BPUuxvfp.js
+var router_BPUuxvfp_exports = /* @__PURE__ */ __exportAll({ getRouter: () => getRouter });
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 var FALLBACK_MESSAGE = "An unexpected error occurred. Try reloading the page.";
@@ -316,8 +316,8 @@ function AppProviders({ children }) {
 		})]
 	});
 }
-var styles_default = "/assets/styles-B4bLiqN7.css";
-var APP_NAME = "Lilt";
+var styles_default = "/assets/styles-D72xiZ-Q.css";
+var APP_NAME = "ACCENTIFY";
 var Route$1 = createRootRoute({
 	head: () => ({
 		meta: [
@@ -333,7 +333,7 @@ var Route$1 = createRootRoute({
 			},
 			{
 				name: "description",
-				content: "Tap and talk. Lilt hears the region in your voice. Pinpoint names the neighborhood — $0.99 a month."
+				content: "Shazam for accents. Tap and talk — ACCENTIFY hears the region. Pinpoint names the neighborhood. Where YOU from?"
 			}
 		],
 		links: [
@@ -383,7 +383,7 @@ var Route$1 = createRootRoute({
 		})]
 	})
 });
-var $$splitComponentImporter = () => import("./routes-BSOCWo2q.mjs");
+var $$splitComponentImporter = () => import("./routes-DNLjL49M.mjs");
 var rootRouteChildren = { IndexRoute: createFileRoute("/")({ component: lazyRouteComponent($$splitComponentImporter, "component") }).update({
 	id: "/",
 	path: "/",
@@ -397,4 +397,4 @@ function getRouter() {
 	});
 }
 //#endregion
-export { getRouter, router_CUw1YPvr_exports as t };
+export { getRouter, router_BPUuxvfp_exports as t };

@@ -3,11 +3,13 @@ import { Button } from "@/components/ui/button";
 
 type Props = {
   open: boolean;
+  busy: boolean;
+  error: string | null;
   onClose: () => void;
   onSubscribe: () => void;
 };
 
-export function Paywall({ open, onClose, onSubscribe }: Props) {
+export function Paywall({ open, busy, error, onClose, onSubscribe }: Props) {
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-50 grid place-items-end sm:place-items-center">
@@ -27,24 +29,25 @@ export function Paywall({ open, onClose, onSubscribe }: Props) {
         </button>
         <p className="text-xs font-medium uppercase tracking-[0.16em] text-fg-subtle">Pinpoint</p>
         <h2 id="paywall-title" className="mt-2 font-display text-3xl tracking-tight">
-          Name the neighborhood
+          $0.99 a month
         </h2>
         <p className="mt-3 text-sm leading-relaxed text-fg-muted">
-          Free Lilt hears the region — American South, Greater London, New England. Pinpoint names the place:
-          South Florida, Boston, East Brooklyn.
+          Free ACCENTIFY names the vicinity — New York, the American South, Greater London. Pinpoint names the
+          neighborhood: Brooklyn, NY, Southie, Hackney.
         </p>
         <ul className="mt-5 space-y-2 text-sm text-fg">
-          <li className="rounded-md bg-bg-subtle px-3 py-2 shadow-border">City and neighborhood on every read</li>
-          <li className="rounded-md bg-bg-subtle px-3 py-2 shadow-border">Saved history stays precise</li>
-          <li className="rounded-md bg-bg-subtle px-3 py-2 shadow-border">Cancel any time</li>
+          <li className="rounded-md bg-bg-subtle px-3 py-2 shadow-border">Neighborhood on every read — Brooklyn, NY, not just New York</li>
+          <li className="rounded-md bg-bg-subtle px-3 py-2 shadow-border">Billed $0.99 each month until you cancel</li>
+          <li className="rounded-md bg-bg-subtle px-3 py-2 shadow-border">Payouts go to the connected bank, not a middle wallet</li>
         </ul>
+        {error ? <p className="mt-4 text-sm text-fg-muted">{error}</p> : null}
         <div className="mt-6 flex items-end justify-between gap-4">
           <div>
             <p className="font-display text-3xl tracking-tight">$0.99</p>
             <p className="text-xs text-fg-subtle">per month</p>
           </div>
-          <Button className="rounded-md px-6" onClick={onSubscribe}>
-            Subscribe
+          <Button className="rounded-md px-6" onClick={onSubscribe} disabled={busy}>
+            {busy ? "Opening checkout" : "Pay $0.99/mo"}
           </Button>
         </div>
       </div>

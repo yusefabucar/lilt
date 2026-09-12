@@ -89,7 +89,7 @@ var HEADERS = { TSS_SHELL: "X-TSS_SHELL" };
 * the dev styles URL for route-scoped CSS collection.
 */
 async function getStartManifest(matchedRoutes) {
-	const { tsrStartManifest } = await import("../_tanstack-start-manifest_v-CpczQtVb.mjs");
+	const { tsrStartManifest } = await import("../_tanstack-start-manifest_v-Df0Zw3rC.mjs");
 	const startManifest = tsrStartManifest();
 	let routes = startManifest.routes;
 	routes[rootRouteId];
@@ -108,10 +108,20 @@ async function getStartManifest(matchedRoutes) {
 		routes: manifestRoutes
 	};
 }
-var manifest = { "d1919bef372c0860392b963ff18b67806cc7c6512563d01840fb21c47e54a8a3": {
-	functionName: "identifyAccent_createServerFn_handler",
-	importer: () => import("./identify-DbKlvwn_.mjs")
-} };
+var manifest = {
+	"16096b5d8c07a59148c4cd218696b3f476c326ca2b33f7d4869c5a114663c8f5": {
+		functionName: "confirmPinpointCheckout_createServerFn_handler",
+		importer: () => import("./checkout-B8LgL2Rk.mjs")
+	},
+	"67144286fdde82237a83ad3ea269ff4933f513a32b436772cbf45f6317c04f57": {
+		functionName: "startPinpointCheckout_createServerFn_handler",
+		importer: () => import("./checkout-B8LgL2Rk.mjs")
+	},
+	"d1919bef372c0860392b963ff18b67806cc7c6512563d01840fb21c47e54a8a3": {
+		functionName: "identifyAccent_createServerFn_handler",
+		importer: () => import("./identify-ClHGVKP_.mjs")
+	}
+};
 async function getServerFnById(id, access) {
 	const serverFnInfo = manifest[id];
 	if (!serverFnInfo) throw new Error("Server function info not found for " + id);
@@ -1379,7 +1389,7 @@ var getBaseManifest = getProdBaseManifest;
 var createEarlyHintsForRequest = createEarlyHintsCollector;
 async function loadEntries() {
 	const [routerEntry, startEntry, pluginAdapters] = await Promise.all([
-		import("./router-CUw1YPvr.mjs").then((n) => n.t),
+		import("./router-BPUuxvfp.mjs").then((n) => n.t),
 		import("./start-5Z2QO8AU.mjs"),
 		import("./empty-plugin-adapters-D9UWiqvJ.mjs")
 	]);

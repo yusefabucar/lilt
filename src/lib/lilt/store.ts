@@ -40,6 +40,6 @@ export const useLilt = create<LiltState>()(
       },
       clearHistory: () => set({ history: [] }),
     }),
-    { name: "lilt-desk-v1" },
+    { name: "accentify-v1" },
   ),
 );

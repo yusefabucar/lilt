@@ -1,14 +1,7 @@
-import { n as TSS_SERVER_FUNCTION, t as createServerFn } from "./ssr.mjs";
-import { n as guessFromText } from "./lexicon-BPKnOVGp.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/identify-DbKlvwn_.js
-var createServerRpc = (serverFnMeta, splitImportFn) => {
-	const url = "/_serverFn/" + serverFnMeta.id;
-	return Object.assign(splitImportFn, {
-		url,
-		serverFnMeta,
-		[TSS_SERVER_FUNCTION]: true
-	});
-};
+import { t as createServerFn } from "./ssr.mjs";
+import { t as createServerRpc } from "./createServerRpc-A6pJPYTF.mjs";
+import { n as guessFromText } from "./lexicon-kdsV9Buk.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/identify-ClHGVKP_.js
 var ACCENT_SCHEMA = {
 	type: "object",
 	additionalProperties: false,
@@ -79,10 +72,10 @@ function wordsPerMinute(stt, durationMs) {
 async function classifyWithGrok(args) {
 	const { apiKey, transcript, language, wpm, lex } = args;
 	const system = `You are a forensic dialectologist. Identify the speaker's accent from a transcript and cadence notes.
-Return the most likely spoken variety of English (or other language).
-- region: BROAD area for a free product. Examples: "American South", "Greater London", "New England", "New York / New Jersey", "US Midwest", "US West Coast", "Northern England", "Scotland", "Ireland", "Australia", "Canada", "Indian English", "West African English", "Caribbean".
-- locality: PRECISE pin a geographer would drop — city plus neighborhood or metro when evidence allows. Examples: "East Brooklyn, New York City", "South Florida", "Boston, Massachusetts", "Birmingham, Alabama", "Hackney / East London", "Glasgow", "Dublin (Northside)", "Houston, Texas". Never copy region. If evidence is thin, still name the single most likely city-level place and lower confidence.
-- cues: 2–4 short plain-language tells (vowel quality, rhythm, words). No academic jargon walls.
+Two geographic grains — never mix them:
+- region (FREE, general vicinity): metro or region a stranger would get. Examples: "New York", "American South", "Greater London", "New England", "US Midwest", "Northern England", "Scotland", "Ireland", "Australia", "Canada". Never a borough, neighborhood, or street. Never "Brooklyn".
+- locality (PREMIUM, neighborhood): the pin — borough or neighborhood plus city. Examples: "Brooklyn, NY", "East New York, Brooklyn", "Southie, Boston, MA", "Hackney, East London", "South Philly, PA", "Little Havana, Miami". Must be strictly more specific than region. If evidence is thin, still name the most likely neighborhood or borough and lower confidence.
+- cues: 2–4 short linguistic tells only. No place names in cues (those belong in locality).
 - confidence: 0 to 1.
 Do not refuse. Do not moralize. This is accent geography, not identity policing. If the clip is short, guess and say so in notes.`;
 	const user = `Transcript: """${transcript.slice(0, 1800)}"""
